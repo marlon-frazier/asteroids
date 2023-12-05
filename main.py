@@ -17,14 +17,19 @@ class Player(Turtle):
         self.color('red')
 
     def rotate_left(self):
-        pass
+        self.left(20)
 
     def rotate_right(self):
-        pass
+        self.right(20)
 
 player = Player()
 
+#Set keyboard bindings
+turtle.listen()
+turtle.onkey(player.rotate_left, "Left")
+turtle.onkey(player.rotate_right, "Right")
 
+turtle.mainloop()
 
 
 
