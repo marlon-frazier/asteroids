@@ -100,6 +100,17 @@ class Missile(Turtle):
         return distance < 20
 
 
+class Star(Turtle):
+    def __init__(self):
+        super().__init__()
+        self.color('white')
+        self.penup()
+        self.goto(random.randint(-300, 300), random.randint(-300, 300))
+        self.shapesize(.1, .1)
+        self.shape('circle')
+        self.speed(0)
+
+
 class Scoreboard(Turtle):
     def __init__(self):
         super().__init__()
@@ -127,6 +138,9 @@ spaceship = Spaceship()
 asteroid = Asteroid()
 missile = Missile()
 scoreboard = Scoreboard()
+
+for i in range(50):
+    star = Star()
 
 # Set keyboard bindings
 turtle.listen()
