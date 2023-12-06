@@ -29,8 +29,6 @@ class Spaceship(Turtle):
         print(self.heading())
 
 
-
-
 class Asteroid(Turtle):
     def __init__(self):
         super().__init__()
@@ -102,12 +100,35 @@ class Missile(Turtle):
         return distance < 20
 
 
+class Scoreboard(Turtle):
+    def __init__(self):
+        super().__init__()
+        self.score = 0
+        self.color('green')
+        self.penup()
+        self.goto(0, 260)
+        self.update_scoreboard()
+        self.hideturtle()
+
+    def update_scoreboard(self):
+        self.write(f"Score: {self.score}", align='center', font=('Courier', 24, 'normal'))
+
+    def update_score(self):
+        self.score += 100
+        self.clear()
+        self.update_scoreboard()
+
+    def game_over(self):
+        self.goto(0,0)
+        self.write("GAME OVER", align='center', font=('Courier', 24, 'normal'))
+
 
 spaceship = Spaceship()
 asteroid = Asteroid()
 missile = Missile()
+scoreboard = Scoreboard()
 
-#Set keyboard bindings
+# Set keyboard bindings
 turtle.listen()
 turtle.onkey(spaceship.rotate_left, "Left")
 turtle.onkey(spaceship.rotate_right, "Right")
@@ -118,14 +139,15 @@ while game_is_on:
     asteroid.move()
     missile.move()
 
-    #check for collision between missile and asteroid
+    # check for collision between missile and asteroid
     if missile.is_collision(asteroid):
-        print('collision')
+        scoreboard.update_score()
         missile.hideturtle()
         asteroid.hideturtle()
         asteroid.refresh()
         missile.state = 'ready'
     elif asteroid.is_collision(spaceship):
+        scoreboard.game_over()
         print('game over')
         break
     turtle.update()
