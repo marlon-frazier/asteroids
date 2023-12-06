@@ -34,12 +34,18 @@ class Spaceship(Turtle):
 class Asteroid(Turtle):
     def __init__(self):
         super().__init__()
-        direction = random.randint(0, 3)
+
         self.penup()
         self.speed(0)
         self.color('gray')
         self.shape('circle')
         self.speed = 2
+        self.refresh()
+
+    def refresh(self):
+        self.showturtle()
+        direction = random.randint(0, 3)
+
         if direction == 0:
             self.goto(450, random.randint(-450, 450))
         elif direction == 1:
@@ -59,6 +65,10 @@ class Asteroid(Turtle):
             self.sety(y - self.speed)
         elif y < 0:
             self.sety(y + self.speed)
+
+    def is_collision(self, other):
+        distance = self.distance(other)
+        return distance < 20
 
 
 class Missile(Turtle):
@@ -87,6 +97,10 @@ class Missile(Turtle):
                 self.hideturtle()
                 self.state = 'ready'
 
+    def is_collision(self, other):
+        distance = self.distance(other)
+        return distance < 20
+
 
 
 spaceship = Spaceship()
@@ -103,6 +117,17 @@ game_is_on = True
 while game_is_on:
     asteroid.move()
     missile.move()
+
+    #check for collision between missile and asteroid
+    if missile.is_collision(asteroid):
+        print('collision')
+        missile.hideturtle()
+        asteroid.hideturtle()
+        asteroid.refresh()
+        missile.state = 'ready'
+    elif asteroid.is_collision(spaceship):
+        print('game over')
+        break
     turtle.update()
 
 
