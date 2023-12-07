@@ -21,12 +21,10 @@ class Spaceship(Turtle):
     def rotate_left(self):
         self.left(20)
         self.direction = self.heading()
-        print(self.heading())
 
     def rotate_right(self):
         self.right(20)
         self.direction = self.heading()
-        print(self.heading())
 
 
 class Asteroid(Turtle):
@@ -53,6 +51,8 @@ class Asteroid(Turtle):
         elif direction == 3:
             self.goto(random.randint(-450, 450), -450)
 
+        print(self.speed)
+
     def move(self):
         x,y = self.position()
         if x > 0:
@@ -67,6 +67,9 @@ class Asteroid(Turtle):
     def is_collision(self, other):
         distance = self.distance(other)
         return distance < 20
+
+    def increase_speed(self):
+        self.speed += .5
 
 
 class Missile(Turtle):
@@ -105,10 +108,11 @@ class Star(Turtle):
         super().__init__()
         self.color('white')
         self.penup()
+        self.speed(0)
         self.goto(random.randint(-300, 300), random.randint(-300, 300))
         self.shapesize(.1, .1)
         self.shape('circle')
-        self.speed(0)
+
 
 
 class Scoreboard(Turtle):
@@ -133,6 +137,9 @@ class Scoreboard(Turtle):
         self.goto(0,0)
         self.write("GAME OVER", align='center', font=('Courier', 24, 'normal'))
 
+    def return_score(self):
+        return self.score
+
 
 spaceship = Spaceship()
 asteroid = Asteroid()
@@ -146,18 +153,21 @@ for i in range(50):
 turtle.listen()
 turtle.onkey(spaceship.rotate_left, "Left")
 turtle.onkey(spaceship.rotate_right, "Right")
-turtle.onkey(lambda: missile.shoot(spaceship.direction) , "space")
+turtle.onkey(lambda: missile.shoot(spaceship.direction), "space")
 game_is_on = True
 
 while game_is_on:
     asteroid.move()
     missile.move()
 
+
     # check for collision between missile and asteroid
     if missile.is_collision(asteroid):
         scoreboard.update_score()
         missile.hideturtle()
         asteroid.hideturtle()
+        if scoreboard.return_score() % 500 == 0:
+            asteroid.increase_speed()
         asteroid.refresh()
         missile.state = 'ready'
     elif asteroid.is_collision(spaceship):
